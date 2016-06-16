@@ -280,6 +280,9 @@ template <class Planar,
           uint32_t ShiftMask,
           uint32_t DepthMask>
 struct pack_traits {
+	static_assert(std::is_pod<Planar>::value, "must be POD");
+	static_assert(std::is_pod<Packed>::value, "must be POD");
+
 	typedef Planar planar_type;
 	typedef Packed packed_type;
 	typedef Endian endian;

@@ -63,6 +63,21 @@ static void test_rgbx_be()
 	printf("planar: %x %x %x | %x %x %x\n", src[0][0], src[1][0], src[2][0], src[0][1], src[1][1], src[2][1]);
 }
 
+static void test_rgb48_be()
+{
+	uint16_t src[3][1] = { { 0xA0A1 }, { 0xB0B1 }, { 0xC0C1 } };
+	uint8_t dst[6];
+	void *src_p[4] = { &src[0], &src[1], &src[2], NULL };
+
+	puts(__func__);
+
+	p2p_select_pack_func(p2p_rgb48_be)((const void * const *)src_p, dst, 0, 1);
+	printf("packed: %x%02x %x%02x %x%02x\n", dst[0], dst[1], dst[2], dst[3], dst[4], dst[5]);
+
+	p2p_select_unpack_func(p2p_rgb48_be)(dst, src_p, 0, 1);
+	printf("planar: %x %x %x\n", src[0][0], src[1][0], src[2][0]);
+}
+
 static void test_y410()
 {
 	uint16_t src[4][1] = { { 0x1A0 }, { 0x1B0 }, { 0x1C0 }, { 0x02 } };
@@ -107,6 +122,7 @@ int main(int argc, char **argv)
 	test_rgb24_be();
 	test_rgb24_le();
 	test_rgbx_be();
+	test_rgb48_be();
 	test_y410();
 	test_uyvy();
 
