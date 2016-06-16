@@ -1,0 +1,6 @@
+*.o
+*.a
+*.lib
+*.dll
+*.exe
+_msvc/*
