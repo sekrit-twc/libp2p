@@ -48,6 +48,21 @@ static void test_rgb24_le()
 	printf("planar: %x %x %x\n", src[0][0], src[1][0], src[2][0]);
 }
 
+static void test_rgbx_be()
+{
+	uint8_t src[3][2] = { { 0xA0, 0xA1 }, { 0xB0, 0xB1 }, { 0xC0, 0xC1 } };
+	uint8_t dst[8];
+	void *src_p[4] = { &src[0], &src[1], &src[2], NULL };
+
+	puts(__func__);
+
+	p2p_select_pack_func(p2p_argb32_be)((const void * const *)src_p, dst, 0, 2);
+	printf("packed: [%x] %x %x %x | [%x] %x %x %x\n", dst[0], dst[1], dst[2], dst[3], dst[4], dst[5], dst[6], dst[7]);
+
+	p2p_select_unpack_func(p2p_argb32_be)(dst, src_p, 0, 2);
+	printf("planar: %x %x %x | %x %x %x\n", src[0][0], src[1][0], src[2][0], src[0][1], src[1][1], src[2][1]);
+}
+
 static void test_y410()
 {
 	uint16_t src[4][1] = { { 0x1A0 }, { 0x1B0 }, { 0x1C0 }, { 0x02 } };
@@ -91,6 +106,7 @@ int main(int argc, char **argv)
 
 	test_rgb24_be();
 	test_rgb24_le();
+	test_rgbx_be();
 	test_y410();
 	test_uyvy();
 

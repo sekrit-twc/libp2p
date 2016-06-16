@@ -462,23 +462,23 @@ using packed_p216 = packed_p016;
 
 // Conversions.
 template <class Traits>
-struct packed_to_planar {
+class packed_to_planar {
 	typedef typename Traits::planar_type planar_type;
 	typedef typename Traits::packed_type packed_type;
 	typedef typename detail::numeric_type<packed_type>::type numeric_type;
 
 	typedef typename Traits::endian endian;
 
-	static constexpr numeric_type get_mask(unsigned c)
+	static numeric_type get_mask(unsigned c)
 	{
 		return ~static_cast<numeric_type>(0) >> (detail::bit_size<numeric_type>::value - Traits::depth_mask[c]);
 	}
 
-	static constexpr planar_type get_component(numeric_type x, unsigned c)
+	static planar_type get_component(numeric_type x, unsigned c)
 	{
 		return static_cast<planar_type>((x >> Traits::shift_mask[c]) & get_mask(c));
 	}
-
+public:
 	static void unpack(const void *src, void * const dst[4], unsigned left, unsigned right)
 	{
 		const packed_type *src_p = static_cast<const packed_type *>(src);
@@ -486,6 +486,7 @@ struct packed_to_planar {
 			static_cast<planar_type *>(dst[0]), static_cast<planar_type *>(dst[1]),
 			static_cast<planar_type *>(dst[2]), static_cast<planar_type *>(dst[3]),
 		};
+		bool alpha_enabled = dst[C_A] != nullptr;
 
 		// Adjust pointers.
 		src_p += left / Traits::pel_per_pack;
@@ -494,39 +495,41 @@ struct packed_to_planar {
 		dst_p[2] += Traits::component_mask.contains(2) ? (left >> Traits::subsampling) : 0;
 		dst_p[3] += Traits::component_mask.contains(3) ? left : 0;
 
+#define P2P_COMPONENT_ENABLED(c) ((Traits::component_mask[c] != C__) && (Traits::component_mask[c] != C_A || alpha_enabled))
 		for (unsigned i = left; i < right; i += Traits::pel_per_pack) {
 			numeric_type x = detail::endian_swap<endian>(*src_p++);
 
-			if (Traits::component_mask[0] != C__)
+			if (P2P_COMPONENT_ENABLED(0))
 				*dst_p[Traits::component_mask[0]]++ = get_component(x, 0);
-			if (Traits::component_mask[1] != C__)
+			if (P2P_COMPONENT_ENABLED(1))
 				*dst_p[Traits::component_mask[1]]++ = get_component(x, 1);
-			if (Traits::component_mask[2] != C__)
+			if (P2P_COMPONENT_ENABLED(2))
 				*dst_p[Traits::component_mask[2]]++ = get_component(x, 2);
-			if (Traits::component_mask[3] != C__)
+			if (P2P_COMPONENT_ENABLED(3))
 				*dst_p[Traits::component_mask[3]]++ = get_component(x, 3);
 		}
+#undef P2P_COMPONENT_ENABLED
 	}
 };
 
 template <class Traits>
-struct planar_to_packed {
+class planar_to_packed {
 	typedef typename Traits::planar_type planar_type;
 	typedef typename Traits::packed_type packed_type;
 	typedef typename detail::numeric_type<packed_type>::type numeric_type;
 
 	typedef typename Traits::endian endian;
 
-	static constexpr numeric_type get_mask(unsigned c)
+	static numeric_type get_mask(unsigned c)
 	{
 		return ~static_cast<numeric_type>(0) >> (detail::bit_size<numeric_type>::value - Traits::depth_mask[c]);
 	}
 
-	static constexpr numeric_type get_component(planar_type x, unsigned c)
+	static numeric_type get_component(planar_type x, unsigned c)
 	{
 		return (static_cast<numeric_type>(x) & get_mask(c)) << Traits::shift_mask[c];
 	}
-
+public:
 	static void pack(const void * const src[4], void *dst, unsigned left, unsigned right)
 	{
 		const planar_type *src_p[4] = {
@@ -534,6 +537,7 @@ struct planar_to_packed {
 			static_cast<const planar_type *>(src[2]), static_cast<const planar_type *>(src[3]),
 		};
 		packed_type *dst_p = static_cast<packed_type *>(dst);
+		bool alpha_enabled = src[C_A] != nullptr;
 
 		// Adjust pointers.
 		src_p[0] += Traits::component_mask.contains(0) ? left : 0;
@@ -542,40 +546,46 @@ struct planar_to_packed {
 		src_p[3] += Traits::component_mask.contains(3) ? left : 0;
 		dst_p += left / Traits::pel_per_pack;
 
+#define P2P_COMPONENT_ENABLED(c) ((Traits::component_mask[c] != C__) && (Traits::component_mask[c] != C_A || alpha_enabled))
 		for (unsigned i = left; i < right; i += Traits::pel_per_pack) {
 			numeric_type x = 0;
 
-			if (Traits::component_mask[0] != C__)
+			if (P2P_COMPONENT_ENABLED(0))
 				x |= get_component(*src_p[Traits::component_mask[0]]++, 0);
-			if (Traits::component_mask[1] != C__)
+			if (P2P_COMPONENT_ENABLED(1))
 				x |= get_component(*src_p[Traits::component_mask[1]]++, 1);
-			if (Traits::component_mask[2] != C__)
+			if (P2P_COMPONENT_ENABLED(2))
 				x |= get_component(*src_p[Traits::component_mask[2]]++, 2);
-			if (Traits::component_mask[3] != C__)
+			if (P2P_COMPONENT_ENABLED(3))
 				x |= get_component(*src_p[Traits::component_mask[3]]++, 3);
 
 			*dst_p++ = detail::endian_swap<endian>(static_cast<packed_type>(x));
 		}
 	}
+#undef P2P_COMPONENT_ENABLED
 };
 
 template <>
-struct packed_to_planar<packed_v210_le> {
+class packed_to_planar<packed_v210_le> {
+public:
 	static void unpack(const void *src, void * const dst[4], unsigned left, unsigned right);
 };
 
 template <>
-struct packed_to_planar<packed_v210_be> {
+class packed_to_planar<packed_v210_be> {
+public:
 	static void unpack(const void *src, void * const dst[4], unsigned left, unsigned right);
 };
 
 template <>
-struct planar_to_packed<packed_v210_le> {
+class planar_to_packed<packed_v210_le> {
+public:
 	static void pack(const void * const src[4], void *dst, unsigned left, unsigned right);
 };
 
 template <>
-struct planar_to_packed<packed_v210_be> {
+class planar_to_packed<packed_v210_be> {
+public:
 	static void pack(const void * const src[4], void *dst, unsigned left, unsigned right);
 };
 
