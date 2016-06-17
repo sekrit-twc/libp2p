@@ -9,7 +9,7 @@
 #include <type_traits>
 
 #ifdef _WIN32
-  #define P2P_BIG_ENDIAN
+  #define P2P_LITTLE_ENDIAN
   #include <stdlib.h>
 #else
   #include <endian.h>
