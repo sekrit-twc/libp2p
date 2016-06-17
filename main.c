@@ -110,13 +110,13 @@ static void test_y416_le()
 
 static void test_uyvy()
 {
-	uint8_t src[4][2] = {
+	uint8_t src[3][2] = {
 		{ 0xA0, 0xB0 },
 		{ 0x40 },
 		{ 0x50 },
 	};
 	union { uint8_t b[4]; uint16_t w[2]; uint32_t dw; } dst;
-	void *src_p[4] = { &src[0], &src[1], &src[2], &src[3] };
+	void *src_p[4] = { &src[0], &src[1], &src[2], NULL };
 
 	puts(__FUNCTION__);
 
@@ -158,7 +158,7 @@ static void test_v216_be()
 		{ 0x5051 },
 	};
 	union { uint8_t b[8]; uint16_t w[4]; uint32_t dw[2]; uint64_t qw; } dst;
-	void *src_p[4] = { &src[0], &src[1], &src[2], &src[3] };
+	void *src_p[4] = { &src[0], &src[1], &src[2], NULL };
 
 	puts(__FUNCTION__);
 
@@ -167,6 +167,51 @@ static void test_v216_be()
 
 	p2p_select_unpack_func(p2p_v216_be)(&dst.qw, src_p, 0, 2);
 	printf("planar: %x %x %x %x\n", src[0][0], src[0][1], src[1][0], src[2][0]);
+}
+
+static void test_nv12_be()
+{
+	uint8_t src[3][1] = { { 0 }, { 0x40 }, { 0x50 } };
+	uint8_t dst[2];
+	void *src_p[4] = { NULL, &src[1], &src[2], NULL };
+
+	puts(__FUNCTION__);
+
+	p2p_select_pack_func(p2p_nv12_be)((const void * const *)src_p, &dst, 0, 2);
+	printf("packed: %x %x\n", dst[0], dst[1]);
+
+	p2p_select_unpack_func(p2p_nv12_be)(&dst, src_p, 0, 2);
+	printf("planar: %x %x\n", src[1][0], src[2][0]);
+}
+
+static void test_nv12_le()
+{
+	uint8_t src[3][1] = { { 0 }, { 0x40 }, { 0x50 } };
+	uint8_t dst[2];
+	void *src_p[4] = { NULL, &src[1], &src[2], NULL };
+
+	puts(__FUNCTION__);
+
+	p2p_select_pack_func(p2p_nv12_le)((const void * const *)src_p, &dst, 0, 2);
+	printf("packed: %x %x\n", dst[0], dst[1]);
+
+	p2p_select_unpack_func(p2p_nv12_le)(&dst, src_p, 0, 2);
+	printf("planar: %x %x\n", src[1][0], src[2][0]);
+}
+
+static void test_p016_le()
+{
+	uint16_t src[3][1] = { { 0 }, { 0x0140 }, { 0x0250 } };
+	union { uint8_t b[4]; uint16_t w[2]; uint32_t dw; } dst;
+	void *src_p[4] = { NULL, &src[1], &src[2], NULL };
+
+	puts(__FUNCTION__);
+
+	p2p_select_pack_func(p2p_p016_le)((const void * const *)src_p, &dst, 0, 2);
+	printf("packed: %x%02x %x%02x\n", dst.b[0], dst.b[1], dst.b[2], dst.b[3]);
+
+	p2p_select_unpack_func(p2p_p016_le)(&dst, src_p, 0, 2);
+	printf("planar: %x %x\n", src[1][0], src[2][0]);
 }
 
 int main(int argc, char **argv)
@@ -185,6 +230,9 @@ int main(int argc, char **argv)
 	test_uyvy();
 	test_v210_le();
 	test_v216_be();
+	test_nv12_be();
+	test_nv12_le();
+	test_p016_le();
 
 	puts("press any key to continue");
 	getc(stdin);
