@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef P2P_API_H_
 #define P2P_API_H_
 
