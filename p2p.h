@@ -24,8 +24,6 @@ static_assert(CHAR_BIT == 8, "8-bit char required");
 
 namespace p2p {
 
-namespace detail {
-
 // Tag types for endian.
 struct little_endian_t {};
 struct big_endian_t {};
@@ -38,6 +36,10 @@ struct big_endian_t {};
   #error wrong endian
 #endif
 
+#undef P2P_BIG_ENDIAN
+#undef P2P_LITTLE_ENDIAN
+
+namespace detail {
 
 // Size of object in bits.
 template <class T>
@@ -219,17 +221,7 @@ struct endian_select {
 };
 
 
-// Packed integer constants for template parameters.
-constexpr uint32_t make_mask(uint8_t x)
-{
-	return make_u32(x, x, x, x);
-}
-
-constexpr uint32_t make_mask(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
-{
-	return make_u32(a, b, c, d);
-}
-
+// Treat u32 as array of u8.
 struct mask4 {
 	uint32_t x;
 
@@ -270,6 +262,19 @@ enum {
 	C_A = 3,
 	C__ = 0xFF,
 };
+
+
+// Packed integer constants for template parameters.
+constexpr uint32_t make_mask(uint8_t x)
+{
+	return detail::make_u32(x, x, x, x);
+}
+
+constexpr uint32_t make_mask(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
+{
+	return detail::make_u32(a, b, c, d);
+}
+
 
 template <class Planar,
           class Packed,
@@ -314,67 +319,67 @@ constexpr detail::mask4 pack_traits<Planar, Packed, Endian, PelPerPack, Subsampl
 // the packed word to accomodate this.
 template <class Planar, class Packed, uint32_t ComponentMask>
 using byte_packed_444_be = pack_traits<
-	Planar, Packed, detail::big_endian_t, 1, 0,
+	Planar, Packed, big_endian_t, 1, 0,
 	ComponentMask,
-	detail::make_mask(3, 2, 1, 0) * detail::bit_size<Planar>::value,
-	detail::make_mask(detail::bit_size<Planar>::value)>;
+	make_mask(3, 2, 1, 0) * detail::bit_size<Planar>::value,
+	make_mask(detail::bit_size<Planar>::value)>;
 
 template <class Planar, class Packed, uint32_t ComponentMask>
 using byte_packed_444_le = pack_traits<
-	Planar, Packed, detail::little_endian_t, 1, 0,
+	Planar, Packed, little_endian_t, 1, 0,
 	ComponentMask,
-	detail::make_mask(3, 2, 1, 0) * detail::bit_size<Planar>::value,
-	detail::make_mask(detail::bit_size<Planar>::value)>;
+	make_mask(3, 2, 1, 0) * detail::bit_size<Planar>::value,
+	make_mask(detail::bit_size<Planar>::value)>;
 
 // Common 444 packings.
-using packed_rgb24_be = byte_packed_444_be<uint8_t, detail::uint24, detail::make_mask(C__, C_R, C_G, C_B)>;
-using packed_rgb24_le = byte_packed_444_le<uint8_t, detail::uint24, detail::make_mask(C__, C_R, C_G, C_B)>;
+using packed_rgb24_be = byte_packed_444_be<uint8_t, detail::uint24, make_mask(C__, C_R, C_G, C_B)>;
+using packed_rgb24_le = byte_packed_444_le<uint8_t, detail::uint24, make_mask(C__, C_R, C_G, C_B)>;
 using packed_rgb24 = detail::endian_select<packed_rgb24_be, packed_rgb24_le>::type;
 
-using packed_argb32_be = byte_packed_444_be<uint8_t, uint32_t, detail::make_mask(C_A, C_R, C_G, C_B)>;
-using packed_argb32_le = byte_packed_444_le<uint8_t, uint32_t, detail::make_mask(C_A, C_R, C_G, C_B)>;
+using packed_argb32_be = byte_packed_444_be<uint8_t, uint32_t, make_mask(C_A, C_R, C_G, C_B)>;
+using packed_argb32_le = byte_packed_444_le<uint8_t, uint32_t, make_mask(C_A, C_R, C_G, C_B)>;
 using packed_argb32 = detail::endian_select<packed_argb32_be, packed_argb32_le>::type;
 
 using packed_ayuv_be = packed_argb32_be;
 using packed_ayuv_le = packed_argb32_le;
 using packed_ayuv = packed_argb32;
 
-using packed_rgb48_be = byte_packed_444_be<uint16_t, detail::uint48, detail::make_mask(C__, C_R, C_G, C_B)>;
-using packed_rgb48_le = byte_packed_444_le<uint16_t, detail::uint48, detail::make_mask(C__, C_R, C_G, C_B)>;
+using packed_rgb48_be = byte_packed_444_be<uint16_t, detail::uint48, make_mask(C__, C_R, C_G, C_B)>;
+using packed_rgb48_le = byte_packed_444_le<uint16_t, detail::uint48, make_mask(C__, C_R, C_G, C_B)>;
 using packed_rgb48 = detail::endian_select<packed_rgb48_be, packed_rgb48_le>::type;
 
-using packed_argb64_be = byte_packed_444_be<uint16_t, uint64_t, detail::make_mask(C_A, C_R, C_G, C_B)>;
-using packed_argb64_le = byte_packed_444_be<uint16_t, uint64_t, detail::make_mask(C_A, C_R, C_G, C_B)>;
+using packed_argb64_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
+using packed_argb64_le = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
 using packed_argb64 = detail::endian_select<packed_argb64_be, packed_argb64_le>::type;
 
 // D3D A2R10G10B10.
 using packed_rgb30_be = pack_traits<
-	uint16_t, uint32_t, detail::big_endian_t, 1, 0,
-	detail::make_mask(C_A, C_R, C_G, C_B),
-	detail::make_mask(30, 20, 10, 0),
-	detail::make_mask(2, 10, 10, 10)>;
+	uint16_t, uint32_t, big_endian_t, 1, 0,
+	make_mask(C_A, C_R, C_G, C_B),
+	make_mask(30, 20, 10, 0),
+	make_mask(2, 10, 10, 10)>;
 using packed_rgb30_le = pack_traits<
-	uint16_t, uint32_t, detail::little_endian_t, 1, 0,
-	detail::make_mask(C_A, C_R, C_G, C_B),
-	detail::make_mask(30, 20, 10, 0),
-	detail::make_mask(2, 10, 10, 10)>;
+	uint16_t, uint32_t, little_endian_t, 1, 0,
+	make_mask(C_A, C_R, C_G, C_B),
+	make_mask(30, 20, 10, 0),
+	make_mask(2, 10, 10, 10)>;
 using packed_rgb30 = detail::endian_select<packed_rgb30_be, packed_rgb30_le>::type;
 
 // MS Y410 and Y416 formats.
 using packed_y410_be = pack_traits<
-	uint16_t, uint32_t, detail::big_endian_t, 1, 0,
-	detail::make_mask(C_A, C_V, C_Y, C_U),
-	detail::make_mask(30, 20, 10, 0),
-	detail::make_mask(2, 10, 10, 10)>;
+	uint16_t, uint32_t, big_endian_t, 1, 0,
+	make_mask(C_A, C_V, C_Y, C_U),
+	make_mask(30, 20, 10, 0),
+	make_mask(2, 10, 10, 10)>;
 using packed_y410_le = pack_traits<
-	uint16_t, uint32_t, detail::little_endian_t, 1, 0,
-	detail::make_mask(C_A, C_V, C_Y, C_U),
-	detail::make_mask(30, 20, 10, 0),
-	detail::make_mask(2, 10, 10, 10)>;
+	uint16_t, uint32_t, little_endian_t, 1, 0,
+	make_mask(C_A, C_V, C_Y, C_U),
+	make_mask(30, 20, 10, 0),
+	make_mask(2, 10, 10, 10)>;
 using packed_y410 = typename detail::endian_select<packed_y410_be, packed_y410_le>::type;
 
-using packed_y416_be = byte_packed_444_be<uint16_t, uint64_t, detail::make_mask(C_A, C_V, C_Y, C_U)>;
-using packed_y416_le = byte_packed_444_le<uint16_t, uint64_t, detail::make_mask(C_A, C_V, C_Y, C_U)>;
+using packed_y416_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_V, C_Y, C_U)>;
+using packed_y416_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_A, C_V, C_Y, C_U)>;
 using packed_y416 = detail::endian_select<packed_y416_be, packed_y416_le>::type;
 
 
@@ -387,29 +392,29 @@ using packed_y416 = detail::endian_select<packed_y416_be, packed_y416_le>::type;
 // memory address of the packed word to accomodate this.
 template <class Planar, class Packed, uint32_t ComponentMask, unsigned ExtraShift = 0>
 using byte_packed_422_be = pack_traits<
-	Planar, Packed, detail::big_endian_t, 2, 1,
+	Planar, Packed, big_endian_t, 2, 1,
 	ComponentMask,
-	detail::make_mask(3, 2, 1, 0) * detail::bit_size<Planar>::value + detail::make_mask(ExtraShift),
-	detail::make_mask(detail::bit_size<Planar>::value) - detail::make_mask(ExtraShift)>;
+	make_mask(3, 2, 1, 0) * detail::bit_size<Planar>::value + make_mask(ExtraShift),
+	make_mask(detail::bit_size<Planar>::value) - make_mask(ExtraShift)>;
 
 template <class Planar, class Packed, uint32_t ComponentMask, unsigned ExtraShift = 0>
 using byte_packed_422_le = pack_traits<
-	Planar, Packed, detail::little_endian_t, 2, 1,
+	Planar, Packed, little_endian_t, 2, 1,
 	ComponentMask,
-	detail::make_mask(0, 1, 2, 3) * detail::bit_size<Planar>::value + detail::make_mask(ExtraShift),
-	detail::make_mask(detail::bit_size<Planar>::value) - detail::make_mask(ExtraShift)>;
+	make_mask(0, 1, 2, 3) * detail::bit_size<Planar>::value + make_mask(ExtraShift),
+	make_mask(detail::bit_size<Planar>::value) - make_mask(ExtraShift)>;
 
 // YUY2.
-using packed_yuy2 = byte_packed_422_be<uint8_t, uint32_t, detail::make_mask(C_Y, C_U, C_Y, C_V)>;
-using packed_uyvy = byte_packed_422_be<uint8_t, uint32_t, detail::make_mask(C_U, C_Y, C_V, C_Y)>;
+using packed_yuy2 = byte_packed_422_be<uint8_t, uint32_t, make_mask(C_Y, C_U, C_Y, C_V)>;
+using packed_uyvy = byte_packed_422_be<uint8_t, uint32_t, make_mask(C_U, C_Y, C_V, C_Y)>;
 
 // MS Y210 and Y216 formats.
-using packed_y210_be = byte_packed_422_be<uint16_t, uint64_t, detail::make_mask(C_Y, C_U, C_Y, C_V), 6>;
-using packed_y210_le = byte_packed_422_le<uint16_t, uint64_t, detail::make_mask(C_Y, C_U, C_Y, C_V), 6>;
+using packed_y210_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V), 6>;
+using packed_y210_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V), 6>;
 using packed_y210 = detail::endian_select<packed_y210_be, packed_y210_le>::type;
 
-using packed_y216_be = byte_packed_422_be<uint16_t, uint64_t, detail::make_mask(C_Y, C_U, C_Y, C_V)>;
-using packed_y216_le = byte_packed_422_le<uint16_t, uint16_t, detail::make_mask(C_Y, C_U, C_Y, C_V)>;
+using packed_y216_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V)>;
+using packed_y216_le = byte_packed_422_le<uint16_t, uint16_t, make_mask(C_Y, C_U, C_Y, C_V)>;
 using packed_y216 = detail::endian_select<packed_y216_be, packed_y216_le>::type;
 
 // Apple v210 format. Handled by special-case code. Only the LE ordering is found in Qt files.
@@ -418,8 +423,8 @@ struct packed_v210_be {};
 using packed_v210 = detail::endian_select<packed_v210_le, packed_v210_be>::type;
 
 // Apple v216 format. Only the LE ordering is found in Qt files.
-using packed_v216_le = byte_packed_422_le<uint16_t, uint64_t, detail::make_mask(C_U, C_Y, C_V, C_Y)>;
-using packed_v216_be = byte_packed_422_be<uint16_t, uint64_t, detail::make_mask(C_U, C_Y, C_V, C_Y)>;
+using packed_v216_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
+using packed_v216_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
 using packed_v216 = detail::endian_select<packed_v216_le, packed_v216_be>::type;
 
 
@@ -429,17 +434,17 @@ using packed_v216 = detail::endian_select<packed_v216_le, packed_v216_be>::type;
 // component order between BE and LE.
 template <class Planar, class Packed, unsigned ExtraShift = 0>
 using byte_packed_nv_be = pack_traits<
-	Planar, Packed, detail::big_endian_t, 2, 1,
-	detail::make_mask(C__, C__, C_V, C_U),
-	detail::make_mask(0, 0, 1, 0) * detail::bit_size<Planar>::value + detail::make_mask(ExtraShift),
-	detail::make_mask(detail::bit_size<Planar>::value) - detail::make_mask(ExtraShift)>;
+	Planar, Packed, big_endian_t, 2, 1,
+	make_mask(C__, C__, C_V, C_U),
+	make_mask(0, 0, 1, 0) * detail::bit_size<Planar>::value + make_mask(ExtraShift),
+	make_mask(detail::bit_size<Planar>::value) - make_mask(ExtraShift)>;
 
 template <class Planar, class Packed, unsigned ExtraShift = 0>
 using byte_packed_nv_le = pack_traits<
-	Planar, Packed, detail::little_endian_t, 2, 1,
-	detail::make_mask(C__, C__, C_V, C_U),
-	detail::make_mask(0, 0, 1, 0) * detail::bit_size<Planar>::value + detail::make_mask(ExtraShift),
-	detail::make_mask(detail::bit_size<Planar>::value) - detail::make_mask(ExtraShift)>;
+	Planar, Packed, little_endian_t, 2, 1,
+	make_mask(C__, C__, C_V, C_U),
+	make_mask(0, 0, 1, 0) * detail::bit_size<Planar>::value + make_mask(ExtraShift),
+	make_mask(detail::bit_size<Planar>::value) - make_mask(ExtraShift)>;
 
 using packed_nv12_be = byte_packed_nv_be<uint8_t, uint16_t>; // AKA NV21.
 using packed_nv12_le = byte_packed_nv_le<uint8_t, uint16_t>;

@@ -94,22 +94,22 @@ void pack_v210(const void * const src[4], void *dst, unsigned left, unsigned rig
 
 void packed_to_planar<packed_v210_be>::unpack(const void *src, void * const dst[4], unsigned left, unsigned right)
 {
-	unpack_v210<detail::big_endian_t>(src, dst, left, right);
+	unpack_v210<big_endian_t>(src, dst, left, right);
 }
 
 void packed_to_planar<packed_v210_le>::unpack(const void *src, void * const dst[4], unsigned left, unsigned right)
 {
-	unpack_v210<detail::little_endian_t>(src, dst, left, right);
+	unpack_v210<little_endian_t>(src, dst, left, right);
 }
 
 void planar_to_packed<packed_v210_be>::pack(const void * const src[4], void *dst, unsigned left, unsigned right)
 {
-	pack_v210<detail::big_endian_t>(src, dst, left, right);
+	pack_v210<big_endian_t>(src, dst, left, right);
 }
 
 void planar_to_packed<packed_v210_le>::pack(const void * const src[4], void *dst, unsigned left, unsigned right)
 {
-	pack_v210<detail::little_endian_t>(src, dst, left, right);
+	pack_v210<little_endian_t>(src, dst, left, right);
 }
 
 } // namespace p2p
