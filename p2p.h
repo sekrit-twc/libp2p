@@ -214,13 +214,6 @@ uint48 endian_swap(uint48 x)
 }
 
 
-// Select type by endian.
-template <class Big, class Little>
-struct endian_select {
-	typedef typename std::conditional<std::is_same<native_endian_t, big_endian_t>::value, Big, Little>::type type;
-};
-
-
 // Treat u32 as array of u8.
 struct mask4 {
 	uint32_t x;
@@ -274,6 +267,13 @@ constexpr uint32_t make_mask(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 {
 	return detail::make_u32(a, b, c, d);
 }
+
+
+// Select type by endian.
+template <class Big, class Little>
+struct endian_select {
+	typedef typename std::conditional<std::is_same<native_endian_t, big_endian_t>::value, Big, Little>::type type;
+};
 
 
 template <class Planar,
@@ -334,11 +334,11 @@ using byte_packed_444_le = pack_traits<
 // Common 444 packings.
 using packed_rgb24_be = byte_packed_444_be<uint8_t, detail::uint24, make_mask(C__, C_R, C_G, C_B)>;
 using packed_rgb24_le = byte_packed_444_le<uint8_t, detail::uint24, make_mask(C__, C_R, C_G, C_B)>;
-using packed_rgb24 = detail::endian_select<packed_rgb24_be, packed_rgb24_le>::type;
+using packed_rgb24 = endian_select<packed_rgb24_be, packed_rgb24_le>::type;
 
 using packed_argb32_be = byte_packed_444_be<uint8_t, uint32_t, make_mask(C_A, C_R, C_G, C_B)>;
 using packed_argb32_le = byte_packed_444_le<uint8_t, uint32_t, make_mask(C_A, C_R, C_G, C_B)>;
-using packed_argb32 = detail::endian_select<packed_argb32_be, packed_argb32_le>::type;
+using packed_argb32 = endian_select<packed_argb32_be, packed_argb32_le>::type;
 
 using packed_ayuv_be = packed_argb32_be;
 using packed_ayuv_le = packed_argb32_le;
@@ -346,11 +346,11 @@ using packed_ayuv = packed_argb32;
 
 using packed_rgb48_be = byte_packed_444_be<uint16_t, detail::uint48, make_mask(C__, C_R, C_G, C_B)>;
 using packed_rgb48_le = byte_packed_444_le<uint16_t, detail::uint48, make_mask(C__, C_R, C_G, C_B)>;
-using packed_rgb48 = detail::endian_select<packed_rgb48_be, packed_rgb48_le>::type;
+using packed_rgb48 = endian_select<packed_rgb48_be, packed_rgb48_le>::type;
 
 using packed_argb64_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
 using packed_argb64_le = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
-using packed_argb64 = detail::endian_select<packed_argb64_be, packed_argb64_le>::type;
+using packed_argb64 = endian_select<packed_argb64_be, packed_argb64_le>::type;
 
 // D3D A2R10G10B10.
 using packed_rgb30_be = pack_traits<
@@ -363,7 +363,7 @@ using packed_rgb30_le = pack_traits<
 	make_mask(C_A, C_R, C_G, C_B),
 	make_mask(30, 20, 10, 0),
 	make_mask(2, 10, 10, 10)>;
-using packed_rgb30 = detail::endian_select<packed_rgb30_be, packed_rgb30_le>::type;
+using packed_rgb30 = endian_select<packed_rgb30_be, packed_rgb30_le>::type;
 
 // MS Y410 and Y416 formats.
 using packed_y410_be = pack_traits<
@@ -376,11 +376,11 @@ using packed_y410_le = pack_traits<
 	make_mask(C_A, C_V, C_Y, C_U),
 	make_mask(30, 20, 10, 0),
 	make_mask(2, 10, 10, 10)>;
-using packed_y410 = typename detail::endian_select<packed_y410_be, packed_y410_le>::type;
+using packed_y410 = typename endian_select<packed_y410_be, packed_y410_le>::type;
 
 using packed_y416_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_V, C_Y, C_U)>;
 using packed_y416_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_A, C_V, C_Y, C_U)>;
-using packed_y416 = detail::endian_select<packed_y416_be, packed_y416_le>::type;
+using packed_y416 = endian_select<packed_y416_be, packed_y416_le>::type;
 
 
 // Base template for YUY2-like 4:2:2 packings.
@@ -411,21 +411,21 @@ using packed_uyvy = byte_packed_422_be<uint8_t, uint32_t, make_mask(C_U, C_Y, C_
 // MS Y210 and Y216 formats.
 using packed_y210_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V), 6>;
 using packed_y210_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V), 6>;
-using packed_y210 = detail::endian_select<packed_y210_be, packed_y210_le>::type;
+using packed_y210 = endian_select<packed_y210_be, packed_y210_le>::type;
 
 using packed_y216_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V)>;
 using packed_y216_le = byte_packed_422_le<uint16_t, uint16_t, make_mask(C_Y, C_U, C_Y, C_V)>;
-using packed_y216 = detail::endian_select<packed_y216_be, packed_y216_le>::type;
+using packed_y216 = endian_select<packed_y216_be, packed_y216_le>::type;
 
 // Apple v210 format. Handled by special-case code. Only the LE ordering is found in Qt files.
 struct packed_v210_le {};
 struct packed_v210_be {};
-using packed_v210 = detail::endian_select<packed_v210_le, packed_v210_be>::type;
+using packed_v210 = endian_select<packed_v210_le, packed_v210_be>::type;
 
 // Apple v216 format. Only the LE ordering is found in Qt files.
 using packed_v216_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
 using packed_v216_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
-using packed_v216 = detail::endian_select<packed_v216_le, packed_v216_be>::type;
+using packed_v216 = endian_select<packed_v216_le, packed_v216_be>::type;
 
 
 // Base template for chroma-interleaved half packings.
@@ -448,16 +448,16 @@ using byte_packed_nv_le = pack_traits<
 
 using packed_nv12_be = byte_packed_nv_be<uint8_t, uint16_t>; // AKA NV21.
 using packed_nv12_le = byte_packed_nv_le<uint8_t, uint16_t>;
-using packed_nv12 = detail::endian_select<packed_nv12_be, packed_nv12_le>::type;
+using packed_nv12 = endian_select<packed_nv12_be, packed_nv12_le>::type;
 
 // MS P010, P016, P210, and P216 formats.
 using packed_p010_be = byte_packed_nv_be<uint16_t, uint32_t, 6>;
 using packed_p010_le = byte_packed_nv_le<uint16_t, uint32_t, 6>;
-using packed_p010 = detail::endian_select<packed_p010_be, packed_p010_le>::type;
+using packed_p010 = endian_select<packed_p010_be, packed_p010_le>::type;
 
 using packed_p016_be = byte_packed_nv_be<uint16_t, uint32_t>;
 using packed_p016_le = byte_packed_nv_le<uint16_t, uint32_t>;
-using packed_p016 = detail::endian_select<packed_p016_be, packed_p016_le>::type;
+using packed_p016 = endian_select<packed_p016_be, packed_p016_le>::type;
 
 using packed_p210_be = packed_p010_be;
 using packed_p210_le = packed_p010_le;
