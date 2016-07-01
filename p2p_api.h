@@ -55,7 +55,7 @@ enum p2p_packing {
 	p2p_y210_be, /* YUYV, big-endian components, lower 6 bits zero */
 	p2p_y210_le, /* YUYV, little-endian components, lower 6 bits zero. Microsoft Y210. */
 	p2p_y210,
-	/** [Y16] [U16] [V16] [Y16] */
+	/** [Y16] [U16] [Y16] [V16] */
 	p2p_y216_be, /* YUYV, big-endian components */
 	p2p_y216_le, /* YUYV, little-endian components. Microsoft Y216. */
 	p2p_y216,
@@ -71,7 +71,7 @@ enum p2p_packing {
 	p2p_nv12_be, /* aka NV21, V first */
 	p2p_nv12_le, /* NV12 */
 	p2p_nv12,
-	/** [U10-X6-V10-X6] */
+	/** [U10-!6-V10-!6] */
 	p2p_p010_be, /* NV21, big-endian components, lower 6 bits zero */
 	p2p_p010_le, /* NV12, big-endian components, lower 6 bits zero. Microsoft P010. */
 	p2p_p010,
@@ -79,7 +79,7 @@ enum p2p_packing {
 	p2p_p016_be, /* NV21, big-endian components */
 	p2p_p016_le, /* NV12, little-endian components. Microsoft P016. */
 	p2p_p016,
-	/** [U10-X6-V10-X6] */
+	/** [U10-!6-V10-!6] */
 	p2p_p210_be, /* NV21, big-endian components, lower 6 bits zero */
 	p2p_p210_le, /* NV12, little-endian components, lower 6 bits zero. Microsoft P210. */
 	p2p_p210,
