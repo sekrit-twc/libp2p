@@ -1,6 +1,6 @@
 #include "p2p.h"
 
-namespace p2p {
+namespace P2P_NAMESPACE {
 
 namespace {
 

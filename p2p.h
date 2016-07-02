@@ -8,6 +8,12 @@
 #include <climits>
 #include <type_traits>
 
+#ifdef P2P_USER_NAMESPACE
+  #define P2P_NAMESPACE P2P_USER_NAMESPACE
+#else
+  #define P2P_NAMESPACE p2p
+#endif
+
 #ifdef _WIN32
   #define P2P_LITTLE_ENDIAN
   #include <stdlib.h>
@@ -22,7 +28,7 @@
 
 static_assert(CHAR_BIT == 8, "8-bit char required");
 
-namespace p2p {
+namespace P2P_NAMESPACE {
 
 // Tag types for endian.
 struct little_endian_t {};

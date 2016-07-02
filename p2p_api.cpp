@@ -4,6 +4,10 @@
 #include "p2p.h"
 #include "p2p_api.h"
 
+#ifdef P2P_USER_NAMESPACE
+  #error API build must not use custom namespace
+#endif
+
 namespace {
 
 struct packing_traits {
