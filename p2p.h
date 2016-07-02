@@ -355,7 +355,7 @@ using packed_rgb48_le = byte_packed_444_le<uint16_t, detail::uint48, make_mask(C
 using packed_rgb48 = endian_select<packed_rgb48_be, packed_rgb48_le>::type;
 
 using packed_argb64_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
-using packed_argb64_le = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
+using packed_argb64_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_A, C_R, C_G, C_B)>;
 using packed_argb64 = endian_select<packed_argb64_be, packed_argb64_le>::type;
 
 // D3D A2R10G10B10.
@@ -424,13 +424,13 @@ using packed_y216_le = byte_packed_422_le<uint16_t, uint16_t, make_mask(C_Y, C_U
 using packed_y216 = endian_select<packed_y216_be, packed_y216_le>::type;
 
 // Apple v210 format. Handled by special-case code. Only the LE ordering is found in Qt files.
-struct packed_v210_le {};
 struct packed_v210_be {};
+struct packed_v210_le {};
 using packed_v210 = endian_select<packed_v210_le, packed_v210_be>::type;
 
 // Apple v216 format. Only the LE ordering is found in Qt files.
-using packed_v216_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
 using packed_v216_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
+using packed_v216_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_U, C_Y, C_V, C_Y)>;
 using packed_v216 = endian_select<packed_v216_le, packed_v216_be>::type;
 
 
