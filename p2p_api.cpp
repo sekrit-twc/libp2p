@@ -18,7 +18,7 @@ struct packing_traits {
 	unsigned char subsample_w;
 	unsigned char subsample_h;
 	bool is_nv;
-	unsigned char bytes_per_sample;	// Only used to copy luma plane for NV12.
+	unsigned char bytes_per_sample; // Only used to copy luma plane for NV12.
 	unsigned char nv_shift; // Extra LSB to shift away for MS P010/P210, etc.
 };
 
