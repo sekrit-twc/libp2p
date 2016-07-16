@@ -51,7 +51,7 @@ static void test_rgb24_le()
 static void test_rgbx_be()
 {
 	uint8_t src[3][2] = { { 0xA0, 0xA1 }, { 0xB0, 0xB1 }, { 0xC0, 0xC1 } };
-	union { uint8_t b[4]; uint32_t dw; } dst;
+	union { uint8_t b[8]; uint32_t dw[2]; } dst;
 	void *src_p[4] = { &src[0], &src[1], &src[2], NULL };
 
 	puts(__FUNCTION__);
