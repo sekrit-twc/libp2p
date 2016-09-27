@@ -43,7 +43,6 @@ const packing_traits traits_table[] = {
 	CASE2(y216, 1, 0),
 	CASE2(v210, 1, 0),
 	CASE2(v216, 1, 0),
-	// For NV12-like formats, bytes_per_pel is the number of bytes in a UV pair.
 	CASE2(nv12, 1, 1, true, 1),
 	CASE2(p010, 1, 1, true, 2, 6),
 	CASE2(p016, 1, 1, true, 2),
@@ -84,7 +83,7 @@ void copy_plane_fast(const void *src, void *dst, ptrdiff_t src_stride, ptrdiff_t
 void unpack_nv16_plane(const void *src, void *dst, ptrdiff_t src_stride, ptrdiff_t dst_stride,
                        const packing_traits &traits, unsigned width, unsigned height)
 {
-	assert(traits.bytes_per_sample == 1);
+	assert(traits.bytes_per_sample == 2);
 
 	for (unsigned i = 0; i < height; ++i) {
 		std::transform(static_cast<const uint16_t *>(src), static_cast<const uint16_t *>(src) + width, static_cast<uint16_t *>(dst), [=](uint16_t x)
@@ -101,7 +100,7 @@ void unpack_nv16_plane(const void *src, void *dst, ptrdiff_t src_stride, ptrdiff
 void pack_nv16_plane(const void *src, void *dst, ptrdiff_t src_stride, ptrdiff_t dst_stride,
                      const packing_traits &traits, unsigned width, unsigned height)
 {
-	assert(traits.bytes_per_sample == 1);
+	assert(traits.bytes_per_sample == 2);
 
 	for (unsigned i = 0; i < height; ++i) {
 		std::transform(static_cast<const uint16_t *>(src), static_cast<const uint16_t *>(src) + width, static_cast<uint16_t *>(dst), [=](uint16_t x)
