@@ -23,7 +23,7 @@ struct packing_traits {
 };
 
 #define CASE(x, ...) \
-	{ p2p_##x, &p2p::packed_to_planar<p2p::packed_##x>::unpack, &p2p::planar_to_packed<p2p::packed_##x>::pack, ##__VA_ARGS__}
+	{ p2p_##x, &p2p::packed_to_planar<p2p::packed_##x>::unpack, &p2p::planar_to_packed<p2p::packed_##x>::pack, ##__VA_ARGS__ }
 #define CASE2(x, ...) \
 	CASE(x##_be, std::is_same<p2p::native_endian_t, p2p::big_endian_t>::value, ##__VA_ARGS__), \
 	CASE(x##_le, std::is_same<p2p::native_endian_t, p2p::little_endian_t>::value, ##__VA_ARGS__), \
