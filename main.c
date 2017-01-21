@@ -56,7 +56,7 @@ static void test_rgbx_be()
 
 	puts(__FUNCTION__);
 
-	p2p_select_pack_func(p2p_argb32_be)((const void * const *)src_p, &dst.dw, 0, 2);
+	p2p_select_pack_func_ex(p2p_argb32_be, 1)((const void * const *)src_p, &dst.dw, 0, 2);
 	printf("packed: [%x] %x %x %x | [%x] %x %x %x\n", dst.b[0], dst.b[1], dst.b[2], dst.b[3], dst.b[4], dst.b[5], dst.b[6], dst.b[7]);
 
 	p2p_select_unpack_func(p2p_argb32_be)(&dst.dw, src_p, 0, 2);
