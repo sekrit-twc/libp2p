@@ -384,7 +384,7 @@ using packed_y410_le = pack_traits<
 	make_mask(C_A, C_V, C_Y, C_U),
 	make_mask(30, 20, 10, 0),
 	make_mask(2, 10, 10, 10)>;
-using packed_y410 = typename endian_select<packed_y410_be, packed_y410_le>::type;
+using packed_y410 = endian_select<packed_y410_be, packed_y410_le>::type;
 
 using packed_y416_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_V, C_Y, C_U)>;
 using packed_y416_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_A, C_V, C_Y, C_U)>;
