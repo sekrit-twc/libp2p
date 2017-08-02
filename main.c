@@ -7,7 +7,7 @@ static void test_api()
 {
 	int i;
 
-	puts(__func__);
+	puts(__FUNCTION__);
 
 	for (i = 0; i < p2p_packing_max; ++i) {
 		p2p_pack_func pack_ptr = p2p_select_pack_func(i);
