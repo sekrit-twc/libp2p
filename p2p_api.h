@@ -95,6 +95,18 @@ enum p2p_packing {
 	p2p_rgba64_be, /* RGBA, big-endian components */
 	p2p_rgba64_le, /* ABGR, little-endian components */
 	p2p_rgba64,
+	/** [A16-B16-G16-R16] */
+	p2p_abgr64_be, /* ABGR, big-endian components */
+	p2p_abgr64_le, /* RGBA, little-endian components */
+	p2p_abgr64,
+	/** [B16-G16-R16] */
+	p2p_bgr48_be, /* BGR, big-endian components */
+	p2p_bgr48_le, /* RGB, little-endian components */
+	p2p_bgr48,
+	/** [B16-G16-R16-A16] */
+	p2p_bgra64_be, /* BGRA, big-endian components */
+	p2p_bgra64_le, /* ARGB, little-endian components */
+	p2p_bgra64,
 
 	p2p_packing_max,
 };
