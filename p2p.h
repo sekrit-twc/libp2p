@@ -368,6 +368,18 @@ using packed_rgba64_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_R, C
 using packed_rgba64_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_R, C_G, C_B, C_A)>;
 using packed_rgba64 = endian_select<packed_rgba64_be, packed_rgba64_le>::type;
 
+using packed_abgr64_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_A, C_B, C_G, C_R)>;
+using packed_abgr64_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_A, C_B, C_G, C_R)>;
+using packed_abgr64 = endian_select<packed_abgr64_be, packed_abgr64_le>::type;
+
+using packed_bgr48_be = byte_packed_444_be<uint16_t, detail::uint48, make_mask(C__, C_B, C_G, C_R)>;
+using packed_bgr48_le = byte_packed_444_le<uint16_t, detail::uint48, make_mask(C__, C_B, C_G, C_R)>;
+using packed_bgr48 = endian_select<packed_bgr48_be, packed_bgr48_le>::type;
+
+using packed_bgra64_be = byte_packed_444_be<uint16_t, uint64_t, make_mask(C_B, C_G, C_R, C_A)>;
+using packed_bgra64_le = byte_packed_444_le<uint16_t, uint64_t, make_mask(C_B, C_G, C_R, C_A)>;
+using packed_bgra64 = endian_select<packed_bgra64_be, packed_bgra64_le>::type;
+
 // D3D A2R10G10B10.
 using packed_rgb30_be = pack_traits<
 	uint16_t, uint32_t, big_endian_t, 1, 0,
