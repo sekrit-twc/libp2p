@@ -7,7 +7,7 @@ rm -f *.o *.a *.so a.out
 
 if [ "x$1" = "xclean" ]; then exit 0; fi
 
-CXXFLAGS="-std=c++11 -Wall -Wextra -Wno-missing-field-initializers -O2"
+CXXFLAGS="-std=c++11 -Wall -Wextra -Wno-missing-field-initializers -O2 -fPIC"
 CFLAGS="-std=c89 -Wall -Wextra -Wno-missing-field-initializers -O2"
 
 c++ ${CXXFLAGS} -c -o p2p_api.o p2p_api.cpp
