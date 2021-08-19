@@ -444,7 +444,7 @@ using packed_y210_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_Y, C_U
 using packed_y210 = endian_select<packed_y210_be, packed_y210_le>::type;
 
 using packed_y216_be = byte_packed_422_be<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V)>;
-using packed_y216_le = byte_packed_422_le<uint16_t, uint16_t, make_mask(C_Y, C_U, C_Y, C_V)>;
+using packed_y216_le = byte_packed_422_le<uint16_t, uint64_t, make_mask(C_Y, C_U, C_Y, C_V)>;
 using packed_y216 = endian_select<packed_y216_be, packed_y216_le>::type;
 
 // Apple v210 format. Handled by special-case code. Only the LE ordering is found in Qt files.
