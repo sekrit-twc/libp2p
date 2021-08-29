@@ -3,5 +3,11 @@
 *.lib
 *.dll
 *.exe
-.vs/*
-_msvc/*
+
+*.db
+*.suo
+*.user
+Debug
+Release
+x64
+_msvc/.vs
