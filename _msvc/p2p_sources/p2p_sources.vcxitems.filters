@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{f924e577-7e34-446c-afa8-ea3f24d277bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{12eb16e7-aa69-401c-b08a-f3b4a4d82ac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\simd">
+      <UniqueIdentifier>{c82539cd-b22e-4172-95cb-d369ffd920a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simd">
+      <UniqueIdentifier>{d4998cf1-b059-493f-975d-d10639a22589}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\simd\cpuinfo_x86.h">
+      <Filter>Header Files\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\simd\p2p_simd.h">
+      <Filter>Header Files\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\p2p.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\p2p_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\simd\cpuinfo_x86.cpp">
+      <Filter>Source Files\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\simd\p2p_simd.cpp">
+      <Filter>Source Files\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\simd\p2p_sse41.cpp">
+      <Filter>Source Files\simd</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\v210.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

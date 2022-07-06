@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{899dd8f7-6cc3-46d1-8d5d-5afb20072fc1}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\p2p.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\p2p_api.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\simd\cpuinfo_x86.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\simd\p2p_simd.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\simd\cpuinfo_x86.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\simd\p2p_simd.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\simd\p2p_sse41.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\v210.cpp" />
+  </ItemGroup>
+</Project>

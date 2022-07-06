@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libp2p", "libp2p\libp2p.vcxproj", "{77BB8DB8-3F81-4F1F-8EC6-A9DBF0181490}"
 EndProject
@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simd_test", "simd_test\simd
 	ProjectSection(ProjectDependencies) = postProject
 		{0955E601-DABB-442D-AFFF-EB4B2BF331FD} = {0955E601-DABB-442D-AFFF-EB4B2BF331FD}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "p2p_sources", "p2p_sources\p2p_sources.vcxitems", "{899DD8F7-6CC3-46D1-8D5D-5AFB20072FC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,5 +62,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {74305C8A-2331-4F93-B432-6269B158AFA4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		p2p_sources\p2p_sources.vcxitems*{0955e601-dabb-442d-afff-eb4b2bf331fd}*SharedItemsImports = 4
+		p2p_sources\p2p_sources.vcxitems*{77bb8db8-3f81-4f1f-8ec6-a9dbf0181490}*SharedItemsImports = 4
+		p2p_sources\p2p_sources.vcxitems*{899dd8f7-6cc3-46d1-8d5d-5afb20072fc1}*SharedItemsImports = 9
 	EndGlobalSection
 EndGlobal
