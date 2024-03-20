@@ -161,8 +161,8 @@ struct uint48 {
 	constexpr operator uint64_t() const { return to_u64(); }
 };
 
-static_assert(std::is_pod<uint24>::value, "uint24 must be POD");
-static_assert(std::is_pod<uint48>::value, "uint48 must be POD");
+static_assert(std::is_standard_layout<uint24>::value, "uint24 must be POD");
+static_assert(std::is_standard_layout<uint48>::value, "uint48 must be POD");
 static_assert(sizeof(uint24) == 3, "uint24 must not have padding");
 static_assert(sizeof(uint48) == 6, "uint48 must not have padding");
 
@@ -298,8 +298,8 @@ template <class Planar,
           uint32_t ShiftMask,
           uint32_t DepthMask>
 struct pack_traits {
-	static_assert(std::is_pod<Planar>::value, "must be POD");
-	static_assert(std::is_pod<Packed>::value, "must be POD");
+	static_assert(std::is_trivial<Planar>::value, "must be POD");
+	static_assert(std::is_trivial<Packed>::value, "must be POD");
 
 	typedef Planar planar_type;
 	typedef Packed packed_type;
