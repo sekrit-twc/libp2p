@@ -26,7 +26,7 @@ all: libp2p.a
 libp2p.a: $(libp2p_OBJS)
 	ar rcs $@ $^
 
-%.o: %.cpp $(znedi3_HDRS) $(testapp_HDRS) $(vsxx_HDRS)
+%.o: %.cpp $(libp2p_HDRS)
 	$(CXX) -c $(EXTRA_CXXFLAGS) $(MY_CXXFLAGS) $(MY_CPPFLAGS) $< -o $@
 
 clean:
