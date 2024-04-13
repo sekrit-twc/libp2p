@@ -27,21 +27,21 @@ uint64_t operator""_q(unsigned long long x)
 	return static_cast<uint64_t>(x);
 }
 
-p2p::detail::uint24 operator""_d24(unsigned long long x)
+p2p::uint24 operator""_d24(unsigned long long x)
 {
-	return p2p::detail::uint24{ static_cast<uint32_t>(x) };
+	return p2p::uint24{ static_cast<uint32_t>(x) };
 }
 
-p2p::detail::uint48 operator""_q48(unsigned long long x)
+p2p::uint48 operator""_q48(unsigned long long x)
 {
-	return p2p::detail::uint48{ static_cast<uint64_t>(x) };
+	return p2p::uint48{ static_cast<uint64_t>(x) };
 }
 
 
 template <class T>
 T to_be(T x)
 {
-	return p2p::detail::endian_swap<p2p::big_endian_t>(x);
+	return p2p::detail::convert_endian<p2p::big_endian_t>(x);
 }
 
 uint8_t to_be(uint8_t x) { return x; }

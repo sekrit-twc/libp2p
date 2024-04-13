@@ -9,7 +9,7 @@ namespace {
 
 uint32_t be(uint32_t x)
 {
-	return p2p::detail::endian_swap<p2p::big_endian_t>(x);
+	return p2p::detail::convert_endian<p2p::big_endian_t>(x);
 }
 
 GTEST_TEST(V210Test, test_v210_be)

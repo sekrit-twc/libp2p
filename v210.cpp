@@ -22,10 +22,10 @@ void unpack_v210(const void *src, void * const dst[4], unsigned left, unsigned r
 	dst_p[C_V] += left / 2;
 
 	for (unsigned i = left; i < right - right % 6; i += 6) {
-		uint32_t w0 = detail::endian_swap<Endian>(*src_p++);
-		uint32_t w1 = detail::endian_swap<Endian>(*src_p++);
-		uint32_t w2 = detail::endian_swap<Endian>(*src_p++);
-		uint32_t w3 = detail::endian_swap<Endian>(*src_p++);
+		uint32_t w0 = detail::convert_endian<Endian>(*src_p++);
+		uint32_t w1 = detail::convert_endian<Endian>(*src_p++);
+		uint32_t w2 = detail::convert_endian<Endian>(*src_p++);
+		uint32_t w3 = detail::convert_endian<Endian>(*src_p++);
 
 		*dst_p[C_U]++ = static_cast<uint16_t>((w0 >> 0) & lsb_10b);
 		*dst_p[C_Y]++ = static_cast<uint16_t>((w0 >> 10) & lsb_10b);
@@ -44,10 +44,10 @@ void unpack_v210(const void *src, void * const dst[4], unsigned left, unsigned r
 	}
 	if (right % 6) {
 		// No check needed as v210 is 128-byte aligned.
-		uint32_t w0 = detail::endian_swap<Endian>(*src_p++);
-		uint32_t w1 = detail::endian_swap<Endian>(*src_p++);
-		uint32_t w2 = detail::endian_swap<Endian>(*src_p++);
-		uint32_t w3 = detail::endian_swap<Endian>(*src_p++);
+		uint32_t w0 = detail::convert_endian<Endian>(*src_p++);
+		uint32_t w1 = detail::convert_endian<Endian>(*src_p++);
+		uint32_t w2 = detail::convert_endian<Endian>(*src_p++);
+		uint32_t w3 = detail::convert_endian<Endian>(*src_p++);
 
 		{
 			*dst_p[C_U]++ = static_cast<uint16_t>((w0 >> 0) & lsb_10b);
@@ -110,10 +110,10 @@ void pack_v210(const void * const src[4], void *dst, unsigned left, unsigned rig
 		w3 |= static_cast<uint32_t>(*src_p[C_V]++ & lsb_10b) << 10;
 		w3 |= static_cast<uint32_t>(*src_p[C_Y]++ & lsb_10b) << 20;
 
-		*dst_p++ = detail::endian_swap<Endian>(w0);
-		*dst_p++ = detail::endian_swap<Endian>(w1);
-		*dst_p++ = detail::endian_swap<Endian>(w2);
-		*dst_p++ = detail::endian_swap<Endian>(w3);
+		*dst_p++ = detail::convert_endian<Endian>(w0);
+		*dst_p++ = detail::convert_endian<Endian>(w1);
+		*dst_p++ = detail::convert_endian<Endian>(w2);
+		*dst_p++ = detail::convert_endian<Endian>(w3);
 	}
 	if (right % 6) {
 		uint32_t w0 = 0;
@@ -143,10 +143,10 @@ void pack_v210(const void * const src[4], void *dst, unsigned left, unsigned rig
 		}
 
 		// No check needed as v210 is 128-byte aligned.
-		*dst_p++ = detail::endian_swap<Endian>(w0);
-		*dst_p++ = detail::endian_swap<Endian>(w1);
-		*dst_p++ = detail::endian_swap<Endian>(w2);
-		*dst_p++ = detail::endian_swap<Endian>(w3);
+		*dst_p++ = detail::convert_endian<Endian>(w0);
+		*dst_p++ = detail::convert_endian<Endian>(w1);
+		*dst_p++ = detail::convert_endian<Endian>(w2);
+		*dst_p++ = detail::convert_endian<Endian>(w3);
 	}
 }
 

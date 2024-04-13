@@ -21,12 +21,12 @@ struct closest_type {
 };
 
 template <>
-struct closest_type<p2p_scalar::detail::uint24> {
+struct closest_type<p2p_scalar::uint24> {
 	typedef uint32_t type;
 };
 
 template <>
-struct closest_type<p2p_scalar::detail::uint48> {
+struct closest_type<p2p_scalar::uint48> {
 	typedef uint64_t type;
 };
 
@@ -118,19 +118,19 @@ void pack_test(p2p::detail::pack_func func)
 	std::mt19937_64 mt;
 	std::generate(planar_ch0.begin(), planar_ch0.end(), [&]()
 	{
-		return static_cast<planar_type>(mt() & ((1ULL << Traits::depth_mask[p2p_scalar::C_R]) - 1));
+		return static_cast<planar_type>(mt() & ((1ULL << p2p_scalar::detail::mask_get(Traits::depth_mask, p2p_scalar::C_R)) - 1));
 	});
 	std::generate(planar_ch1.begin(), planar_ch1.end(), [&]()
 	{
-		return static_cast<planar_type>(mt() & ((1ULL << Traits::depth_mask[p2p_scalar::C_G]) - 1));
+		return static_cast<planar_type>(mt() & ((1ULL << p2p_scalar::detail::mask_get(Traits::depth_mask, p2p_scalar::C_G)) - 1));
 	});
 	std::generate(planar_ch2.begin(), planar_ch2.end(), [&]()
 	{
-		return static_cast<planar_type>(mt() & ((1ULL << Traits::depth_mask[p2p_scalar::C_B]) - 1));
+		return static_cast<planar_type>(mt() & ((1ULL << p2p_scalar::detail::mask_get(Traits::depth_mask, p2p_scalar::C_B)) - 1));
 	});
 	std::generate(planar_ch3.begin(), planar_ch3.end(), [&]()
 	{
-		return static_cast<planar_type>(mt() & ((1ULL << Traits::depth_mask[p2p_scalar::C_A]) - 1));
+		return static_cast<planar_type>(mt() & ((1ULL << p2p_scalar::detail::mask_get(Traits::depth_mask, p2p_scalar::C_A)) - 1));
 	});
 
 	std::array<packed_type, 48> packed_scalar_alpha = {};
