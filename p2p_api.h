@@ -41,11 +41,15 @@ enum p2p_packing {
 	p2p_rgb30,
 	/** [A2-V10-Y10-U10] */
 	p2p_y410_be, /* AVYU packed in big-endian DWORD */
-	p2p_y410_le, /* AVYU packed in little-endian DWORD */
+	p2p_y410_le, /* AVYU packed in little-endian DWORD. Microsoft Y410 */
 	p2p_y410,
+	/** [A12-!4-V12-!4-Y12-!4-U12-!4] */
+	p2p_y412_be, /* AVYU, big-endian components, lower 4 bits zero */
+	p2p_y412_le, /* UYVA, little-endian component, lower 4 bits zero. Y412 */
+	p2p_y412,
 	/** [A16-V16-Y16-U16] */
 	p2p_y416_be, /* AVYU, big-endian components */
-	p2p_y416_le, /* UYVA, little-endian components */
+	p2p_y416_le, /* UYVA, little-endian components. Microsoft Y416 */
 	p2p_y416,
 	/** [Y8] [U8] [Y8] [V8] */
 	p2p_yuy2,
@@ -53,11 +57,15 @@ enum p2p_packing {
 	p2p_uyvy,
 	/** [Y10-!6] [U10-!6] [Y10-!6] [V10-!6] */
 	p2p_y210_be, /* YUYV, big-endian components, lower 6 bits zero */
-	p2p_y210_le, /* YUYV, little-endian components, lower 6 bits zero. Microsoft Y210. */
+	p2p_y210_le, /* YUYV, little-endian components, lower 6 bits zero. Microsoft Y210 */
 	p2p_y210,
+	/** [Y12-!4] [U12-!4] [Y12-!4] [V12-!4] */
+	p2p_y212_be, /* YUYV, big-endian components, lower 4 bits zero */
+	p2p_y212_le, /* YUYV, little-endian components, lower 4 bits zero. Y212 */
+	p2p_y212,
 	/** [Y16] [U16] [Y16] [V16] */
 	p2p_y216_be, /* YUYV, big-endian components */
-	p2p_y216_le, /* YUYV, little-endian components. Microsoft Y216. */
+	p2p_y216_le, /* YUYV, little-endian components. Microsoft Y216 */
 	p2p_y216,
 	/** [!2-V10-Y10-U10] [!2-Y10-U10-Y10] [!2-U10-Y10-V10] [!2-Y10-V10-Y10] */
 	p2p_v210_be, /* v210 with big-endian DWORDs */
@@ -65,27 +73,39 @@ enum p2p_packing {
 	p2p_v210,
 	/** [U16] [Y16] [V16] [Y16] */
 	p2p_v216_be, /* UYVY, big-endian components */
-	p2p_v216_le, /* UYVY, little-endian components. Apple/QuickTime v216. */
+	p2p_v216_le, /* UYVY, little-endian components. Apple/QuickTime v216 */
 	p2p_v216,
 	/** [U8-V8] */
-	p2p_nv12_be, /* aka NV21, V first */
+	p2p_nv12_be, /* NV21, V first */
 	p2p_nv12_le, /* NV12 */
 	p2p_nv12,
+	/** [U8-V8] */
+	p2p_nv16_be, /* NV61, V first */
+	p2p_nv16_le, /* NV16 */
+	p2p_nv16,
 	/** [U10-!6-V10-!6] */
 	p2p_p010_be, /* NV21, big-endian components, lower 6 bits zero */
-	p2p_p010_le, /* NV12, little-endian components, lower 6 bits zero. Microsoft P010. */
+	p2p_p010_le, /* NV12, little-endian components, lower 6 bits zero. Microsoft P010 */
 	p2p_p010,
+	/** [U12-!4-V12-!4] */
+	p2p_p012_be, /* NV21, big-endian components, lower 4 bits zero */
+	p2p_p012_le, /* NV12, little-endian components, lower 4 bits zero. P012 */
+	p2p_p012,
 	/** [U16-V16] */
-	p2p_p016_be, /* NV21, big-endian components */
-	p2p_p016_le, /* NV12, little-endian components. Microsoft P016. */
+	p2p_p016_be, /* NV21-like, big-endian components */
+	p2p_p016_le, /* NV12-like, little-endian components. Microsoft P016 */
 	p2p_p016,
 	/** [U10-!6-V10-!6] */
-	p2p_p210_be, /* NV21, big-endian components, lower 6 bits zero */
-	p2p_p210_le, /* NV12, little-endian components, lower 6 bits zero. Microsoft P210. */
+	p2p_p210_be, /* NV21-like, big-endian components, lower 6 bits zero */
+	p2p_p210_le, /* NV12-like, little-endian components, lower 6 bits zero. Microsoft P210 */
 	p2p_p210,
+	/** [U12-!4-V12-!4] */
+	p2p_p212_be, /* NV21-like, big-endian components, lower 4 bits zero */
+	p2p_p212_le, /* NV12-like, little-endian components, lower 4 bits zero. P212 */
+	p2p_p212,
 	/** [U16-V16] */
-	p2p_p216_be, /* NV21, big-endian components */
-	p2p_p216_le, /* NV12, little-endian components. Microsoft P216. */
+	p2p_p216_be, /* NV21-like, big-endian components */
+	p2p_p216_le, /* NV12-like, little-endian components. Microsoft P216 */
 	p2p_p216,
 	/** [R8-G8-B8-A8] */
 	p2p_rgba32_be, /* RGBA */

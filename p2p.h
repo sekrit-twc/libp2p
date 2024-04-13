@@ -326,6 +326,10 @@ using packed_ayuv_be = packed_argb32_be; /** ayuv32be, a.k.a. AYUV */
 using packed_ayuv_le = packed_argb32_le; /** ayuv32le, a.k.a. VUYA */
 using packed_ayuv = packed_argb32;
 
+using packed_y412_be = byte_packed_444_be<uint16_t, uint64_t, mask(C_A, C_V, C_Y, C_U), 4>; /**< y412be */
+using packed_y412_le = byte_packed_444_le<uint16_t, uint64_t, mask(C_A, C_V, C_Y, C_U), 4>; /**< y412le, a.k.a. Y412 */
+using packed_y412 = endian_select<packed_y412_be, packed_y412_le>;
+
 using packed_y416_be = byte_packed_444_be<uint16_t, uint64_t, mask(C_A, C_V, C_Y, C_U)>; /**< y416be */
 using packed_y416_le = byte_packed_444_le<uint16_t, uint64_t, mask(C_A, C_V, C_Y, C_U)>; /**< y416le, a.k.a. Y416 */
 using packed_y416 = endian_select<packed_y416_be, packed_y416_le>;
@@ -350,6 +354,10 @@ using packed_y210_be = byte_packed_422_be<uint16_t, uint64_t, mask(C_Y, C_U, C_Y
 using packed_y210_le = byte_packed_422_le<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V), 6>; /**< y210le, a.k.a. Y210 */
 using packed_y210 = endian_select<packed_y210_be, packed_y210_le>;
 
+using packed_y212_be = byte_packed_422_be<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V), 4>; /**< y212be */
+using packed_y212_le = byte_packed_422_le<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V), 4>; /**< y212le, a.k.a. Y212 */
+using packed_y212 = endian_select<packed_y210_be, packed_y210_le>;
+
 using packed_y216_be = byte_packed_422_be<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V)>; /**< y216be */
 using packed_y216_le = byte_packed_422_le<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V)>; /**< y216le, a.k.a. Y216 */
 using packed_y216 = endian_select<packed_y216_be, packed_y216_le>;
@@ -366,6 +374,10 @@ using packed_nv12_be = byte_packed_nv422_be<uint8_t, uint16_t>; /**< nv12be, a.k
 using packed_nv12_le = byte_packed_nv422_le<uint8_t, uint16_t>; /**< nv12le, a.k.a. NV12 */
 using packed_nv12 = endian_select<packed_nv12_be, packed_nv12_le>;
 
+using packed_nv16_be = packed_nv12_be; /**< nv16be, a.k.a. NV61 */
+using packed_nv16_le = packed_nv12_le; /**< nv16le, a.k.a. NV16 */
+using packed_nv16 = packed_nv12;
+
 // 10-bit NV formats.
 using packed_p210_be = byte_packed_nv422_be<uint16_t, uint32_t, 6>; /**< p210be */
 using packed_p210_le = byte_packed_nv422_le<uint16_t, uint32_t, 6>; /**< p210le, a.k.a. P210 */
@@ -374,6 +386,15 @@ using packed_p210 = endian_select<packed_p210_be, packed_p210_le>;
 using packed_p010_be = packed_p210_be; /**< p010be */
 using packed_p010_le = packed_p210_le; /**< p010le, a.k.a. P010 */
 using packed_p010 = packed_p210;
+
+// 12-bit NV formats.
+using packed_p212_be = byte_packed_nv422_be<uint16_t, uint32_t, 4>; /**< p210be */
+using packed_p212_le = byte_packed_nv422_le<uint16_t, uint32_t, 4>; /**< p210le, a.k.a. P212 */
+using packed_p212 = endian_select<packed_p212_be, packed_p212_le>;
+
+using packed_p012_be = packed_p212_be; /**< p010be */
+using packed_p012_le = packed_p212_le; /**< p010le, a.k.a. P012 */
+using packed_p012 = packed_p212;
 
 // 16-bit NV formats.
 using packed_p216_be = byte_packed_nv422_be<uint16_t, uint32_t>; /**< p216be */
