@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+
+jobs:
+  run-tests:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04-arm
+            compiler: g++
+            cxx: g++
+          - os: ubuntu-24.04-arm
+            compiler: clang++
+            cxx: clang++
+          - os: ubuntu-latest
+            compiler: g++
+            cxx: g++
+          - os: ubuntu-latest
+            compiler: clang++
+            cxx: clang++
+          - os: ubuntu-latest
+            compiler: icx
+          - os: macos-latest
+            compiler: clang++
+          - os: macos-13
+            compiler: clang++
+          - os: windows-latest
+            compiler: msvc
+            cxx: cl
+          - os: windows-latest
+            compiler: clang-cl
+            cxx: clang-cl
+          - os: windows-latest
+            compiler: icx
+          - os: windows-11-arm
+            compiler: msvc
+            cxx: cl
+          - os: windows-11-arm
+            compiler: clang-cl
+            cxx: clang-cl
+
+    name: "Test (${{ matrix.os }}, ${{ matrix.compiler }})"
+    runs-on: ${{ matrix.os }}
+    env:
+      CXX: ${{ matrix.cxx }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install ICX
+        uses: fortran-lang/setup-fortran@v1
+        if: matrix.compiler == 'icx'
+        id: setup-fortran
+        with:
+          compiler: intel
+
+      - name: Install Meson
+        run: pip install meson
+
+      - name: Set SIMD option
+        run: |
+          if [[ "${{ runner.arch }}" == ARM* ]]; then
+            echo "MESON_SIMD_FLAG=-Dsimd=disabled" >> $GITHUB_ENV
+          else
+            echo "MESON_SIMD_FLAG=-Dsimd=enabled" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Configure with Meson
+        run: meson setup builddir --buildtype=release $MESON_SIMD_FLAG -Dtest=enabled ${{ matrix.compiler == 'msvc' && '--vsenv' || '' }}
+
+      - name: Build
+        run: meson compile -C builddir
+
+      - name: Run tests
+        run: meson test -C builddir --print-errorlogs
