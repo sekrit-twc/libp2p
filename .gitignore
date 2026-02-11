@@ -11,3 +11,7 @@ Debug
 Release
 x64
 _msvc/.vs
+
+# Meson
+/subprojects/*
+!/subprojects/*.wrap

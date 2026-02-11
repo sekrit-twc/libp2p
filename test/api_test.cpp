@@ -1,5 +1,6 @@
 #include <array>
 #include <cstdint>
+#include <cstring>
 #include <memory>
 #include <vector>
 #include "p2p_api.h"

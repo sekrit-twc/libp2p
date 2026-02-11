@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  run-tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-15-intel, windows-latest, windows-11-arm]
+        compiler: [g++, clang++, icx, msvc, clang-cl, msys2-gcc]
+        exclude:
+          # ---------- Linux ----------
+          - os: ubuntu-24.04-arm
+            compiler: icx
+          - os: ubuntu-24.04-arm
+            compiler: msvc
+          - os: ubuntu-24.04-arm
+            compiler: clang-cl
+          - os: ubuntu-24.04-arm
+            compiler: msys2-gcc
+
+          - os: ubuntu-latest
+            compiler: msvc
+          - os: ubuntu-latest
+            compiler: clang-cl
+          - os: ubuntu-latest
+            compiler: msys2-gcc
+
+          # ---------- macOS ----------
+          - os: macos-latest
+            compiler: g++
+          - os: macos-latest
+            compiler: icx
+          - os: macos-latest
+            compiler: msvc
+          - os: macos-latest
+            compiler: clang-cl
+          - os: macos-latest
+            compiler: msys2-gcc
+
+          - os: macos-15-intel
+            compiler: g++
+          - os: macos-15-intel
+            compiler: icx
+          - os: macos-15-intel
+            compiler: msvc
+          - os: macos-15-intel
+            compiler: clang-cl
+          - os: macos-15-intel
+            compiler: msys2-gcc
+
+          # ---------- Windows ----------
+          - os: windows-latest
+            compiler: g++
+          - os: windows-latest
+            compiler: clang++
+
+          - os: windows-11-arm
+            compiler: g++
+          - os: windows-11-arm
+            compiler: clang++
+          - os: windows-11-arm
+            compiler: icx
+          - os: windows-11-arm
+            compiler: msys2-gcc
+        include:
+          - compiler: g++
+            cxx: g++
+          - compiler: clang++
+            cxx: clang++
+          - compiler: msvc
+            cxx: cl
+          - compiler: clang-cl
+            cxx: clang-cl
+          - compiler: msys2-gcc
+            msys2: true
+
+
+    name: "Test (${{ matrix.os }}, ${{ matrix.compiler }})"
+    runs-on: ${{ matrix.os }}
+    env:
+      CXX: ${{ matrix.cxx }}
+
+    defaults:
+      run:
+        shell: ${{ matrix.msys2 == true && 'msys2 {0}' || 'bash' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install ICX
+        if: matrix.compiler == 'icx'
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: intel
+
+      - name: Setup MSYS2 (MINGW64)
+        if: matrix.msys2 == true
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            mingw-w64-x86_64-ca-certificates
+            mingw-w64-x86_64-meson
+            mingw-w64-x86_64-toolchain
+
+      - name: Install Meson
+        if: matrix.msys2 != true
+        run: pip install meson
+
+      - name: Configure with Meson
+        run: >
+          meson setup builddir
+          --buildtype=release
+          -Dtest=enabled
+          ${{ (runner.arch == 'X86' || runner.arch == 'X64') && '-Dsimd=enabled' || '-Dsimd=disabled' }}
+          ${{ matrix.compiler == 'msvc' && '--vsenv' || '' }}
+
+      - name: Build
+        run: meson compile -C builddir --verbose
+
+      - name: Run tests
+        run: meson test -C builddir --verbose
