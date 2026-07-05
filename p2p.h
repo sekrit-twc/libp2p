@@ -356,7 +356,7 @@ using packed_y210 = endian_select<packed_y210_be, packed_y210_le>;
 
 using packed_y212_be = byte_packed_422_be<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V), 4>; /**< y212be */
 using packed_y212_le = byte_packed_422_le<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V), 4>; /**< y212le, a.k.a. Y212 */
-using packed_y212 = endian_select<packed_y210_be, packed_y210_le>;
+using packed_y212 = endian_select<packed_y212_be, packed_y212_le>;
 
 using packed_y216_be = byte_packed_422_be<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V)>; /**< y216be */
 using packed_y216_le = byte_packed_422_le<uint16_t, uint64_t, mask(C_Y, C_U, C_Y, C_V)>; /**< y216le, a.k.a. Y216 */
