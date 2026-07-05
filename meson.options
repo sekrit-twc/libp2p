@@ -1,0 +1,2 @@
+option('simd', type: 'feature', description: 'enable simd')
+option('test', type: 'feature', description: 'enable test')
